@@ -1,7 +1,7 @@
 import numpy as np
 
-from src.algorithms.gauss_seidel import gauss_seidel
-from src.algorithms.jacobi import jacobi
+from algorithms.gauss_seidel import gauss_seidel
+from algorithms.jacobi import jacobi
 
 if __name__ == '__main__':
     gammas = [5, 2, 1.2]
