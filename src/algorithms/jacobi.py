@@ -1,18 +1,43 @@
 import numpy as np
 
-from src.utils.math import is_stopping_criterion_satisfied, is_spectral_radius_condition_satisfied
+from src.algorithms.iterative_method import iterative_method
+from src.utils.math import spectral_radius, is_strictly_diagonally_dominant
 
 
-def jacobi(equation_matrix: np.ndarray, right_side_vector: np.ndarray, initial_guess: np.ndarray) -> None:
-    diagonal_matrix = np.diag(np.diag(equation_matrix))
-    remaining_matrix = equation_matrix - diagonal_matrix
-    solution = initial_guess
-    iterations_cnt = 0
+def jacobi(A: np.ndarray, b: np.ndarray, x_0: np.ndarray) -> None:
+    D = np.diag(np.diag(A))
+    U = np.triu(A, k=1)
+    L = np.tril(A, k=-1)
+    Q = D
+    v_j = np.linalg.solve(Q, b)
+    U_j = np.linalg.solve(Q, -U - L)
 
-    if not is_spectral_radius_condition_satisfied(equation_matrix, diagonal_matrix):
+    is_spectral_radius_satisfied = spectral_radius(A, D) < 1
+    is_equation_array_strictly_diagonally_dominant = is_strictly_diagonally_dominant(A)
+    is_iteration_matrix_norm_satisfied = np.linalg.norm(U_j, ord=2) < 1
+
+    if not is_spectral_radius_satisfied:
+        print_results()
         return
 
-    dinv_b = np.linalg.solve(diagonal_matrix, right_side_vector)
-    while not is_stopping_criterion_satisfied(equation_matrix, right_side_vector, solution):
-        solution = dinv_b - np.linalg.solve(diagonal_matrix, remaining_matrix @ solution)
-        iterations_cnt = iterations_cnt + 1
+    solution, iterations_cnt = iterative_method(A, b, U_j, v_j, x_0)
+
+    print_results(
+        is_spectral_radius_satisfied,
+        is_equation_array_strictly_diagonally_dominant,
+        is_iteration_matrix_norm_satisfied,
+        iterations_cnt,
+    )
+
+
+def print_results(
+        is_spectral_radius_satisfied=False,
+        is_equation_array_strictly_diagonally_dominant=False,
+        is_iteration_matrix_norm_satisfied=False,
+        iterations_cnt=0,
+) -> None:
+    print("JACOBI METHOD")
+    print(f"\tspectral radius: {is_spectral_radius_satisfied}")
+    print(f"\tstrictly diagonally dominant: {is_equation_array_strictly_diagonally_dominant}")
+    print(f"\titeration matrix norm: {is_iteration_matrix_norm_satisfied}")
+    print(f"\titerations: {iterations_cnt}")

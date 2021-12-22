@@ -1,21 +1,34 @@
 import numpy as np
 
+from src.algorithms.gauss_seidel import gauss_seidel
 from src.algorithms.jacobi import jacobi
 
 if __name__ == '__main__':
     gammas = [5, 2, 1.2]
-    initial_guess = np.zeros(shape=(20, 1))
+    x_0 = np.zeros(shape=(20, 1))
 
     for gamma in gammas:
-        # Generate equation matrix
-        equation_matrix = np.zeros(shape=(20, 20))
-        np.fill_diagonal(equation_matrix, gamma)
-        indices = np.arange(19)
-        equation_matrix[indices, indices + 1] = equation_matrix[indices + 1, indices] = -1
+        print("--------------------------")
+        print(f"GAMMA: {gamma}")
+        print()
 
-        # Generate right side vector
-        right_side_vector = np.full(shape=(20, 1), fill_value=gamma - 2)
-        right_side_vector[0] = right_side_vector[len(right_side_vector) - 1] = gamma - 1
+        # Generate equation matrix from task assignment
+        A = np.zeros(shape=(20, 20))
+        np.fill_diagonal(A, gamma)
+        indices = np.arange(19)
+        A[indices, indices + 1] = A[indices + 1, indices] = -1
+
+        # Generate right side vector from task assignment
+        b = np.full(shape=(20, 1), fill_value=gamma - 2)
+        b[0] = b[len(b) - 1] = gamma - 1
 
         # Solve with Jacobi method
-        jacobi(equation_matrix, right_side_vector, initial_guess)
+        jacobi(A, b, x_0)
+
+        print()
+
+        # Solve with Gauss-Seidel method
+        gauss_seidel(A, b, x_0)
+
+        print("--------------------------")
+        print()
