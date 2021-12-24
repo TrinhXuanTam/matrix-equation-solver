@@ -6,17 +6,22 @@ from utils.math import is_stopping_criterion_satisfied
 def iterative_method(
         A: np.ndarray,
         b: np.ndarray,
-        U: np.ndarray,
-        v: np.ndarray,
+        Q: np.ndarray,
         x_0: np.ndarray,
 ) -> tuple[np.ndarray, int]:
     iterations_cnt = 0
     x = x_0
 
+    # Calculate iteration matrix U = Q^-1 * (Q - A) and vector v = Q^-1 * b
+    U = np.linalg.solve(Q, Q - A)
+    v = np.linalg.solve(Q, b)
+
     # Iterate until stopping criterion is not satisfied
     while not is_stopping_criterion_satisfied(A, b, x):
         # Calculate next solution x where U represents iteration matrix and v vector
         x = v + U @ x
+
+        # Increment iteration counter
         iterations_cnt = iterations_cnt + 1
 
     # Return result and number of iterations
