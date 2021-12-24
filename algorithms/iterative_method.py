@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 
 from utils.math import is_stopping_criterion_satisfied
@@ -8,7 +10,7 @@ def iterative_method(
         b: np.ndarray,
         Q: np.ndarray,
         x_0: np.ndarray,
-) -> tuple[np.ndarray, int]:
+) -> Tuple[np.ndarray, int]:
     iterations_cnt = 0
     x = x_0
 
@@ -18,7 +20,7 @@ def iterative_method(
 
     # Iterate until stopping criterion is not satisfied
     while not is_stopping_criterion_satisfied(A, b, x):
-        # Calculate next solution x where U represents iteration matrix and v vector
+        # Calculate next solution x_(k+1) = v + U * x_k
         x = v + U @ x
 
         # Increment iteration counter

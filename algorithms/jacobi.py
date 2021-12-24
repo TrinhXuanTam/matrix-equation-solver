@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import numpy as np
 
 from algorithms.iterative_method import iterative_method
@@ -27,7 +29,7 @@ def jacobi(A: np.ndarray, b: np.ndarray, x_0: np.ndarray) -> None:
     )
 
 
-def check_convergence_criterion(A: np.ndarray, Q: np.ndarray) -> tuple[bool, bool, bool]:
+def check_convergence_criterion(A: np.ndarray, Q: np.ndarray) -> Tuple[bool, bool, bool]:
     is_spectral_radius_satisfied = spectral_radius(A, Q) < 1
     is_equation_array_strictly_diagonally_dominant = is_strictly_diagonally_dominant(A)
     is_iteration_matrix_norm_satisfied = np.linalg.norm(np.linalg.solve(Q, Q - A), ord=2) < 1
