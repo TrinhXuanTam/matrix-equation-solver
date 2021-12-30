@@ -9,7 +9,7 @@ def is_stopping_criterion_satisfied(
     # Calculate precision with euclidean norm
     precision = np.linalg.norm(equation_matrix @ solution - right_side_vector, ord=2) / np.linalg.norm(right_side_vector, ord=2)
     # Check if stopping criterion from task assignment is satisfied
-    return precision < 10e-6
+    return precision < 10 ** -6
 
 
 def spectral_radius(A: np.ndarray, Q: np.ndarray) -> float:
